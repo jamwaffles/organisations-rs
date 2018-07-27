@@ -1,0 +1,17 @@
+version: '3'
+services:
+  postgres:
+    image: "postgres:9.6"
+    ports:
+      - "5432:5431"
+    volumes:
+      - "./postgres_data:/var/lib/postgresql/data"
+# organisations:
+#    image: "rust:1.27-slim"
+#    command: /bin/sh -c "cargo run"
+#    working_dir: /opt
+#    ports: 
+#      - "8080:8080"
+#    volumes:
+#      - ".:/opt"
+#      - "$HOME/.cargo/registry:/root/.cargo/registry"
