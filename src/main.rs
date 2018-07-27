@@ -8,6 +8,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 extern crate postgres;
+extern crate uuid;
 
 mod events;
 mod eventstore;
