@@ -1,7 +1,0 @@
-[package]
-name = "organisations-server"
-version = "0.1.0"
-authors = ["James Waples <jamwaffles@gmail.com>"]
-
-[dependencies]
-actix-web = "0.7.2"
