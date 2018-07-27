@@ -8,8 +8,8 @@ Run the server:
 cd ./server
 cargo run
 
-# In another console
-curl http://localhost:8080/1/bar/index.html
+# In another console (or use api.rest)
+curl http://localhost:8080/health
 
 # >>> Hello bar! id:1
 ```
