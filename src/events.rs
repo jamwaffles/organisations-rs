@@ -31,33 +31,6 @@ pub struct MembershipEdited {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Membership {
-    user_id: String,
-    organisation_id: String,
-    organisation_type: String,
-    name: String,
-    email: String,
-    invite_token: String,
-    membership_status: String,
-    membership_role: String,
-}
-
-impl Default for Membership {
-    fn default() -> Membership {
-        Membership {
-            user_id: "".into(),
-            organisation_id: "".into(),
-            organisation_type: "".into(),
-            name: "".into(),
-            email: "".into(),
-            invite_token: "".into(),
-            membership_status: "NOT_INVITED".into(),
-            membership_role: "NOT_INVITED".into(),
-        }
-    }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
 #[serde(tag = "type")]
 pub enum Event {
     AccountInvitedToOrg(AccountInvitedToOrg),
