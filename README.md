@@ -2,6 +2,12 @@
 
 [![Build Status](https://travis-ci.org/jamwaffles/organisations-rs.svg?branch=master)](https://travis-ci.org/jamwaffles/organisations-rs)
 
+Setup the database:
+```bash
+db.sh
+```
+Note that database data directory is persisted in `./postgres_data`.
+
 Run the server:
 
 ```bash
