@@ -1,7 +1,8 @@
+use context::Context;
 use events::Event;
 use postgres::types::ToSql;
 use postgres::Connection;
-use serde_json::{from_value, Value as JsonValue};
+use serde_json::{from_value, to_value, Value as JsonValue};
 
 pub trait ReadQuery {
     fn to_query_string(&self) -> (&str, Vec<&str>);
@@ -11,6 +12,7 @@ pub trait EventStore {
     fn read_all<T>(&self, query: T) -> Vec<Event>
     where
         T: ReadQuery;
+    fn save(&self, data: &Event, context: &Option<Context>);
 }
 
 pub struct PgEventStore {
@@ -64,5 +66,20 @@ impl EventStore for PgEventStore {
                 from_value(json).expect("Row convert")
             })
             .collect()
+    }
+
+    fn save(&self, event: &Event, context: &Option<Context>) {
+        self.connection
+            .execute(
+                "INSERT INTO events(data, context) \
+                 VALUES($1, $2) \
+                 ON CONFLICT (id) DO NOTHING \
+                 RETURNING *",
+                &[
+                    &to_value(event).expect("Event2JSON"),
+                    &to_value(context).expect("Context2JSON"),
+                ],
+            )
+            .expect("Insert Event");
     }
 }

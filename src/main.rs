@@ -10,6 +10,7 @@ extern crate serde_derive;
 extern crate postgres;
 extern crate uuid;
 
+mod context;
 mod events;
 mod eventstore;
 mod operations;
