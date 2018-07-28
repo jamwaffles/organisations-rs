@@ -15,3 +15,14 @@ impl HealthcheckSuccess {
         Self { ok: true }
     }
 }
+
+#[derive(Serialize)]
+pub struct InviteUserSuccess {
+    ok: bool,
+}
+
+impl InviteUserSuccess {
+    pub fn new() -> Self {
+        Self { ok: true }
+    }
+}

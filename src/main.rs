@@ -9,6 +9,8 @@ extern crate serde_json;
 extern crate serde_derive;
 extern crate postgres;
 extern crate uuid;
+extern crate bytes;
+extern crate futures;
 
 mod context;
 mod events;
@@ -24,6 +26,7 @@ use postgres::{Connection, TlsMode};
 use eventstore::{EventStore, GetInvitesQuery};
 
 use operations::health;
+use operations::invite_user;
 
 fn main() {
     let conn = Connection::connect(
@@ -39,7 +42,9 @@ fn main() {
 
     println!("Events: {:?}", events);
 
-    server::new(|| App::new().resource("/health", |r| r.method(Method::GET).f(health)))
+    server::new(|| App::new()
+        .resource("/health", |r| r.method(Method::GET).f(health))
+        .resource("/invite_user", |r| r.method(Method::POST).f(invite_user)))
         .bind("0.0.0.0:8080")
         .unwrap()
         .run();

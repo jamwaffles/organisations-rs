@@ -4,4 +4,13 @@ http://localhost:8080
 --
 GET /health
 
-
+--
+POST /invite_user
+{
+    "name": "mareq",
+    "email": "marek@repositive.io",
+    "organisation_id": "Repositive",
+    "invite_token": "Let me in!",
+    "organisation_type": "pdx-vendor",
+    "membership_role": "ADMIN"
+}
