@@ -47,6 +47,6 @@ fn main() {
                 r.method(Method::GET).with(get_organisation_members)
             })
     }).bind("0.0.0.0:8080")
-        .unwrap()
-        .run();
+    .unwrap()
+    .run();
 }

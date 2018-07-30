@@ -10,8 +10,9 @@ sudo: required
 
 before_install:
   - rustup toolchain add nightly || true
-  - rustup component add rustfmt-preview --toolchain nightly
   - rustup self update
+  - rustup component add rustfmt-preview --toolchain nightly
+  - cargo +nightly fmt --version || true
 
 script:
   - cargo +nightly fmt --all -- --check

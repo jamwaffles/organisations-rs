@@ -64,8 +64,7 @@ impl EventStore for PgEventStore {
                 let json: JsonValue = row.get("data");
 
                 from_value(json).expect("Row convert")
-            })
-            .collect()
+            }).collect()
     }
 
     fn save(&self, event: &Event, context: &Option<Context>) {
@@ -79,7 +78,6 @@ impl EventStore for PgEventStore {
                     &to_value(event).expect("Event2JSON"),
                     &to_value(context).expect("Context2JSON"),
                 ],
-            )
-            .expect("Insert Event");
+            ).expect("Insert Event");
     }
 }
