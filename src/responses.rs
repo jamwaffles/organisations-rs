@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-use aggregators::get_invite::{hydrate as hydrate_membership, Membership};
+use aggregators::members_by_organisation_id;
 
 #[derive(Serialize)]
 pub struct SuccessfulResponse<T: Serialize> {
@@ -19,12 +19,12 @@ impl HealthcheckSuccess {
 }
 
 #[derive(Serialize)]
-pub struct GetOrganisationUsersSuccess {
-    users: Vec<Membership>,
+pub struct GetOrganisationMembersSuccess {
+    users: Vec<members_by_organisation_id::Membership>,
 }
 
-impl GetOrganisationUsersSuccess {
-    pub fn new() -> Self {
-        unimplemented!();
+impl GetOrganisationMembersSuccess {
+    pub fn new(users: Vec<members_by_organisation_id::Membership>) -> Self {
+        Self { users }
     }
 }

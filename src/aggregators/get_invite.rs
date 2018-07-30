@@ -1,14 +1,5 @@
-use events::{Event, MembershipRole, OrganisationId, OrganisationType};
+use events::{Event, MembershipRole, MembershipStatus, OrganisationId, OrganisationType};
 use uuid::Uuid;
-
-#[derive(Clone, Debug, Serialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum MembershipStatus {
-    NotInvited,
-    Pending,
-    Accepted,
-    Revoked,
-}
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Membership {

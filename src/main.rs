@@ -7,7 +7,10 @@ extern crate serde;
 extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
+extern crate futures;
 extern crate postgres;
+extern crate r2d2;
+extern crate r2d2_postgres;
 extern crate uuid;
 
 mod aggregators;
@@ -17,36 +20,46 @@ mod eventstore;
 mod operations;
 mod responses;
 
+use actix_web::actix::{Addr, SyncArbiter, System};
 use actix_web::http::Method;
 use actix_web::{server, App};
-use eventstore::PgEventStore;
-use postgres::{Connection, TlsMode};
+// use eventstore::PgEventStore;
+use r2d2_postgres::{PostgresConnectionManager, TlsMode};
 
-use eventstore::{EventStore, GetInvitesQuery};
-
+use eventstore::EventStoreExecutor;
+// use eventstore::{EventStore, GetInvitesQuery};
 use operations::{get_organisation_members, health};
 
+/// State given to requests
+pub struct AppState {
+    /// Database connection
+    pub eventstore: Addr<EventStoreExecutor>,
+}
+
 fn main() {
-    let conn = Connection::connect(
+    let sys = System::new("organisations-rs");
+
+    let manager = PostgresConnectionManager::new(
         "postgres://postgres:postgres@localhost:5431/organisations-rs",
         TlsMode::None,
-    ).unwrap();
+    ).expect("Could not connect to DB");
 
-    let store = PgEventStore::new(conn).expect("Could not create store");
+    let pool = r2d2::Pool::builder()
+        .build(manager)
+        .expect("Failed to create pool.");
 
-    let events = store.read_all(GetInvitesQuery {
-        organisation_id: "b1272b5a-05a9-4658-a3e2-3f91ef765b96".into(),
-    });
+    let addr = SyncArbiter::start(3, move || EventStoreExecutor(pool.clone()));
 
-    println!("Events: {:?}", events);
-
-    server::new(|| {
-        App::new()
-            .resource("/health", |r| r.method(Method::GET).f(health))
-            .resource("/get-organisation-members/{organisation_id}", |r| {
-                r.method(Method::GET).with(get_organisation_members)
-            })
+    server::new(move || {
+        App::with_state(AppState {
+            eventstore: addr.clone(),
+        }).resource("/health", |r| r.method(Method::GET).f(health))
+        .resource("/get-organisation-members/{organisation_id}", |r| {
+            r.method(Method::GET).with(get_organisation_members)
+        })
     }).bind("0.0.0.0:8080")
     .unwrap()
-    .run();
+    .start();
+
+    sys.run();
 }

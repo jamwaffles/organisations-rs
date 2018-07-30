@@ -4,11 +4,19 @@ pub type OrganisationId = Uuid;
 pub type UserId = Uuid;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MembershipRole {
-    #[serde(rename = "BASIC")]
     Basic,
-    #[serde(rename = "ADMIN")]
     Admin,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum MembershipStatus {
+    NotInvited,
+    Pending,
+    Accepted,
+    Revoked,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
