@@ -8,6 +8,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 extern crate futures;
+extern crate jsonwebtoken;
 extern crate postgres;
 extern crate r2d2;
 extern crate r2d2_postgres;
@@ -15,8 +16,10 @@ extern crate uuid;
 
 mod aggregators;
 mod context;
+mod enforcement;
 mod events;
 mod eventstore;
+mod middleware;
 mod operations;
 mod responses;
 
@@ -27,7 +30,6 @@ use actix_web::{server, App};
 use r2d2_postgres::{PostgresConnectionManager, TlsMode};
 
 use eventstore::EventStoreExecutor;
-// use eventstore::{EventStore, GetInvitesQuery};
 use operations::{get_organisation_members, health};
 
 /// State given to requests
@@ -53,9 +55,11 @@ fn main() {
     server::new(move || {
         App::with_state(AppState {
             eventstore: addr.clone(),
-        }).resource("/health", |r| r.method(Method::GET).f(health))
+        }).resource("/health", |r| r.get().f(health))
         .resource("/get-organisation-members/{organisation_id}", |r| {
-            r.method(Method::GET).with(get_organisation_members)
+            r.middleware(middleware::InjectJwt);
+            r.middleware(enforcement::AdminOnly);
+            r.get().with(get_organisation_members);
         })
     }).bind("0.0.0.0:8080")
     .unwrap()
