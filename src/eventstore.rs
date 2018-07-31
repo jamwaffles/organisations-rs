@@ -35,7 +35,8 @@ pub struct EventsQuery {
 
 impl EventsQuery {
     pub fn as_query_string(&self) -> String {
-        let filters = self.search
+        let filters = self
+            .search
             .keys()
             .enumerate()
             .map(|(i, key)| format!("events.data->>'{}' = ${}", key, i + 1))
@@ -85,8 +86,7 @@ impl Handler<EventsQuery> for EventStoreExecutor {
                 let evt: Event = from_value(json).expect("Row convert");
 
                 evt
-            })
-            .collect())
+            }).collect())
     }
 }
 

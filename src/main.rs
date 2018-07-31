@@ -56,14 +56,14 @@ fn main() {
         App::with_state(AppState {
             eventstore: addr.clone(),
         }).resource("/health", |r| r.get().f(health))
-            .resource("/get-organisation-members/{organisation_id}", |r| {
-                r.middleware(middleware::InjectJwt);
-                r.middleware(enforcement::AdminOnly);
-                r.get().with(get_organisation_members);
-            })
+        .resource("/get-organisation-members/{organisation_id}", |r| {
+            r.middleware(middleware::InjectJwt);
+            r.middleware(enforcement::AdminOnly);
+            r.get().with(get_organisation_members);
+        })
     }).bind("0.0.0.0:8080")
-        .unwrap()
-        .start();
+    .unwrap()
+    .start();
 
     sys.run();
 }
