@@ -11,7 +11,6 @@ impl<S> Middleware<S> for AdminOnly {
         let token = exts.get::<CurrentAuth>();
 
         // Auth on presence of token
-        // TODO: Validate contents of token
         match token {
             Some(token) => token
                 .memberships
