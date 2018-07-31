@@ -16,5 +16,5 @@ pub fn get_organisation_members(
             organisation_id: organisation_id.into_inner(),
         },
     ).and_then(|members| Ok(HttpResponse::Ok().json(SuccessfulResponse { result: members })))
-    .responder()
+        .responder()
 }

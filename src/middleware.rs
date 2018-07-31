@@ -1,7 +1,7 @@
 use actix_web::http::header::AUTHORIZATION;
 use actix_web::middleware::{Middleware, Started};
 use actix_web::{HttpRequest, Result};
-use jsonwebtoken::{decode, encode, Algorithm, Header, TokenData, Validation};
+use jsonwebtoken::{decode, Validation};
 use uuid::Uuid;
 
 /// JWT struct
@@ -25,10 +25,16 @@ impl<S> Middleware<S> for InjectJwt {
                 &auth.to_str().unwrap().split_whitespace().nth(1).unwrap(),
                 "super_secret_jam".as_ref(),
                 &Validation::default(),
-            ).expect("Could not decode")
-            .claims;
+            );
 
-            req.extensions_mut().insert(token);
+            match token {
+                Ok(token) => {
+                    req.extensions_mut().insert(token);
+                }
+                Err(err) => {
+                    println!("Token decode error {}", err.description());
+                }
+            }
         }
 
         Ok(Started::Done)
