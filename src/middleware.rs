@@ -39,12 +39,8 @@ impl<S> Middleware<S> for InjectJwt {
             );
 
             match token {
-                Ok(token) => {
-                    req.extensions_mut().insert(token);
-                }
-                Err(err) => {
-                    println!("Token decode error {}", err.description());
-                }
+                Ok(t) => req.extensions_mut().insert(t.claims),
+                Err(err) => println!("Token decode error {}", err.description()),
             }
         }
 
