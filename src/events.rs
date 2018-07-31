@@ -59,7 +59,7 @@ pub struct MembershipEdited {
     pub membership_role: MembershipRole,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct AccountUpdated {
     pub user_id: UserId,
     pub name: Option<String>,
@@ -70,7 +70,7 @@ pub struct AccountUpdated {
     pub work_role: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct AvatarEdited {
     pub user_id: UserId,
     pub organisation_id: OrganisationId,
@@ -84,4 +84,6 @@ pub enum Event {
     AccountInviteToOrgAccepted(AccountInviteToOrgAccepted),
     AccountInviteToOrgRevoked(AccountInviteToOrgRevoked),
     MembershipEdited(MembershipEdited),
+    AccountUpdated(AccountUpdated),
+    AvatarEdited(AvatarEdited),
 }

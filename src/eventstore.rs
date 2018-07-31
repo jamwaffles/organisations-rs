@@ -12,6 +12,7 @@ use uuid::Uuid;
 
 pub struct EventStoreExecutor(pub Pool<PostgresConnectionManager>);
 
+#[derive(Debug, Clone, Copy)]
 pub struct GetOrganisationMembersQuery {
     pub organisation_id: Uuid,
 }

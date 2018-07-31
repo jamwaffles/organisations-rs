@@ -67,5 +67,6 @@ pub fn hydrate(events: &Vec<Event>) -> Membership {
 
                 ..acc
             },
+            _ => unimplemented!(),
         })
 }
