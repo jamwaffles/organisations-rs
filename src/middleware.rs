@@ -1,15 +1,26 @@
 use actix_web::http::header::AUTHORIZATION;
 use actix_web::middleware::{Middleware, Started};
 use actix_web::{HttpRequest, Result};
+use events::{MembershipRole, MembershipStatus, OrganisationType};
 use jsonwebtoken::{decode, Validation};
 use uuid::Uuid;
 
 /// JWT struct
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AuthMembership {
+    pub organisation_id: Uuid,
+    pub organisation_type: OrganisationType,
+    pub membership_status: MembershipStatus,
+    pub membership_role: MembershipRole,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CurrentAuth {
     user_id: Uuid,
     name: String,
     email: String,
+    pub memberships: Vec<AuthMembership>,
 }
 
 pub struct InjectJwt;

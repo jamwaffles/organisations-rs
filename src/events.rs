@@ -3,14 +3,14 @@ use uuid::Uuid;
 pub type OrganisationId = Uuid;
 pub type UserId = Uuid;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MembershipRole {
     Basic,
     Admin,
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MembershipStatus {
     NotInvited,
