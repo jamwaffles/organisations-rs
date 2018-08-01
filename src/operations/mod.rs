@@ -1,4 +1,5 @@
 mod get_organisation_members;
+mod update_membership;
 
 use actix_web::{HttpRequest, HttpResponse};
 use responses::{HealthcheckSuccess, SuccessfulResponse};
@@ -11,3 +12,4 @@ pub fn health(_req: &HttpRequest<AppState>) -> HttpResponse {
 }
 
 pub use self::get_organisation_members::get_organisation_members;
+pub use self::update_membership::update_membership;

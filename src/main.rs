@@ -30,7 +30,7 @@ use actix_web::{server, App};
 use r2d2_postgres::{PostgresConnectionManager, TlsMode};
 
 use eventstore::EventStoreExecutor;
-use operations::{get_organisation_members, health};
+use operations::{get_organisation_members, health, update_membership};
 
 /// State given to requests
 pub struct AppState {
@@ -60,6 +60,10 @@ fn main() {
         .resource("/get-organisation-members/{organisation_id}", |r| {
             r.middleware(enforcement::OrganisationMember);
             r.get().with(get_organisation_members);
+        }).resource("/edit-membership", |r| {
+            r.middleware(enforcement::OrganisationMember);
+            r.middleware(enforcement::AdminOnly);
+            r.post().with(update_membership)
         })
     }).bind("0.0.0.0:8080")
     .unwrap()

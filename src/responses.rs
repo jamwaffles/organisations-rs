@@ -19,6 +19,17 @@ impl HealthcheckSuccess {
 }
 
 #[derive(Serialize)]
+pub struct GenericSuccess {
+    ok: bool,
+}
+
+impl GenericSuccess {
+    pub fn new() -> Self {
+        Self { ok: true }
+    }
+}
+
+#[derive(Serialize)]
 pub struct GetOrganisationMembersSuccess {
     users: Vec<members_by_organisation_id::Membership>,
 }
