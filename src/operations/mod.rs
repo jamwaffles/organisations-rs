@@ -1,4 +1,5 @@
 mod get_organisation_members;
+mod update_membership;
 
 use actix_web::{HttpRequest, HttpResponse};
 use responses::{HealthcheckSuccess, SuccessfulResponse};
