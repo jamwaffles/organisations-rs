@@ -58,7 +58,7 @@ fn main() {
         }).middleware(middleware::InjectJwt)
         .resource("/health", |r| r.get().f(health))
         .resource("/get-organisation-members/{organisation_id}", |r| {
-            r.middleware(enforcement::AdminOnly);
+            r.middleware(enforcement::OrganisationMember);
             r.get().with(get_organisation_members);
         })
     }).bind("0.0.0.0:8080")

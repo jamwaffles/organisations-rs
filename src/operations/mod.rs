@@ -11,3 +11,4 @@ pub fn health(_req: &HttpRequest<AppState>) -> HttpResponse {
 }
 
 pub use self::get_organisation_members::get_organisation_members;
+pub use self::update_membership::update_membership;
