@@ -1,7 +1,7 @@
 use actix_web::http::Method;
 use actix_web::middleware::{Middleware, Started};
 use actix_web::{FromRequest, HttpRequest, HttpResponse, Json, Path, Result};
-use events::MembershipRole;
+use events::{MembershipRole, MembershipStatus};
 use futures::Future;
 use middleware::CurrentAuth;
 use uuid::Uuid;
@@ -37,8 +37,10 @@ impl<S: 'static> Middleware<S> for OrganisationMember {
             Some(token) => token
                 .memberships
                 .iter()
-                .find(|membership| membership.organisation_id == req_organisation_id)
-                .map(|_| Ok(Started::Done))
+                .find(|membership| {
+                    membership.organisation_id == req_organisation_id
+                        && membership.membership_status == MembershipStatus::Accepted
+                }).map(|_| Ok(Started::Done))
                 .unwrap_or(Ok(Started::Response(HttpResponse::Unauthorized().finish()))),
             None => Ok(Started::Response(HttpResponse::Unauthorized().finish())),
         }

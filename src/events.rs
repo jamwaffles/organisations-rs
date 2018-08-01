@@ -10,7 +10,7 @@ pub enum MembershipRole {
     Admin,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MembershipStatus {
     NotInvited,
