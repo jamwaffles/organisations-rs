@@ -1,15 +1,26 @@
 use actix_web::http::header::AUTHORIZATION;
 use actix_web::middleware::{Middleware, Started};
 use actix_web::{HttpRequest, Result};
-use jsonwebtoken::{decode, encode, Algorithm, Header, TokenData, Validation};
+use events::{MembershipRole, MembershipStatus, OrganisationType};
+use jsonwebtoken::{decode, Validation};
 use uuid::Uuid;
 
 /// JWT struct
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AuthMembership {
+    pub organisation_id: Uuid,
+    pub organisation_type: OrganisationType,
+    pub membership_status: MembershipStatus,
+    pub membership_role: MembershipRole,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CurrentAuth {
     user_id: Uuid,
     name: String,
     email: String,
+    pub memberships: Vec<AuthMembership>,
 }
 
 pub struct InjectJwt;
@@ -25,10 +36,12 @@ impl<S> Middleware<S> for InjectJwt {
                 &auth.to_str().unwrap().split_whitespace().nth(1).unwrap(),
                 "super_secret_jam".as_ref(),
                 &Validation::default(),
-            ).expect("Could not decode")
-            .claims;
+            );
 
-            req.extensions_mut().insert(token);
+            match token {
+                Ok(t) => req.extensions_mut().insert(t.claims),
+                Err(err) => println!("Token decode error {}", err.description()),
+            }
         }
 
         Ok(Started::Done)
