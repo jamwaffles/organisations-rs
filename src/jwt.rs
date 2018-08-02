@@ -1,6 +1,5 @@
-use actix_web::http::header::AUTHORIZATION;
-use actix_web::middleware::{Middleware, Started};
-use actix_web::{HttpRequest, Result};
+use actix_web::error::{Error, ErrorUnauthorized};
+use actix_web::{http::header::AUTHORIZATION, FromRequest, HttpRequest};
 use events::{MembershipRole, MembershipStatus, OrganisationType};
 use jsonwebtoken::{decode, Validation};
 use uuid::Uuid;
@@ -23,27 +22,25 @@ pub struct CurrentAuth {
     pub memberships: Vec<AuthMembership>,
 }
 
-pub struct InjectJwt;
+impl<S> FromRequest<S> for CurrentAuth {
+    type Config = ();
+    type Result = Result<Self, Error>;
 
-impl<S> Middleware<S> for InjectJwt {
-    fn start(&self, req: &HttpRequest<S>) -> Result<Started> {
+    #[inline]
+    fn from_request(req: &HttpRequest<S>, _: &Self::Config) -> Self::Result {
         let authorisation = req.headers().get(AUTHORIZATION);
 
         if let Some(auth) = authorisation {
             // TODO: Validate token
             // TODO: Secret as env var
-            let token = decode::<CurrentAuth>(
+            decode::<CurrentAuth>(
                 &auth.to_str().unwrap().split_whitespace().nth(1).unwrap(),
                 "super_secret_jam".as_ref(),
                 &Validation::default(),
-            );
-
-            match token {
-                Ok(t) => req.extensions_mut().insert(t.claims),
-                Err(err) => println!("Token decode error {}", err.description()),
-            }
+            ).map_err(|_| ErrorUnauthorized("JWT could not be decoded"))
+            .map(|t| t.claims)
+        } else {
+            Err(ErrorUnauthorized("JWT not present"))
         }
-
-        Ok(Started::Done)
     }
 }

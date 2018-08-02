@@ -19,12 +19,11 @@ mod context;
 mod enforcement;
 mod events;
 mod eventstore;
-mod middleware;
+mod jwt;
 mod operations;
 mod responses;
 
 use actix_web::actix::{Addr, SyncArbiter, System};
-use actix_web::http::Method;
 use actix_web::{server, App};
 // use eventstore::PgEventStore;
 use r2d2_postgres::{PostgresConnectionManager, TlsMode};
@@ -55,8 +54,7 @@ fn main() {
     server::new(move || {
         App::with_state(AppState {
             eventstore: addr.clone(),
-        }).middleware(middleware::InjectJwt)
-        .resource("/health", |r| r.get().f(health))
+        }).resource("/health", |r| r.get().f(health))
         .resource("/get-organisation-members/{organisation_id}", |r| {
             r.middleware(enforcement::OrganisationMember);
             r.get().with(get_organisation_members);
