@@ -19,12 +19,11 @@ mod context;
 mod enforcement;
 mod events;
 mod eventstore;
-mod middleware;
+mod jwt;
 mod operations;
 mod responses;
 
 use actix_web::actix::{Addr, SyncArbiter, System};
-use actix_web::http::Method;
 use actix_web::{server, App};
 // use eventstore::PgEventStore;
 use r2d2_postgres::{PostgresConnectionManager, TlsMode};
