@@ -1,5 +1,5 @@
 use actix_web::Json;
-use actix_web::{AsyncResponder, FutureResponse, HttpResponse, Path, State};
+use actix_web::{AsyncResponder, FutureResponse, HttpResponse, State};
 use events::{Event, MembershipEdited, MembershipRole};
 use eventstore::SaveEvent;
 use futures::future::Future;
@@ -19,11 +19,14 @@ pub fn update_membership(
 ) -> FutureResponse<HttpResponse> {
     // Store an event; ¯\_(ツ)_/¯
 
+    println!("/edit-membership");
     let ev = MembershipEdited {
         organisation_id: payload.organisation_id,
         user_id: payload.user_id,
         membership_role: payload.membership_role.clone(),
     };
+
+    println!("UpdateMembership: {:?}", ev);
 
     let q = SaveEvent::new(Event::MembershipEdited(ev), None);
 

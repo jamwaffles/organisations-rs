@@ -6,4 +6,9 @@ GET /health
 
 GET /get-organisation-members/deadc0de-dead-40de-8ead-c0dedeadc0de
 
-
+POST /edit-membership
+{
+  user_id: '927e490a-a902-40e0-99d5-8903b3b80f76',
+  organisation_id: '8799cd23-6d30-4c0a-aa81-bea172e46fd6',
+  membership_role: 'ADMIN',
+}

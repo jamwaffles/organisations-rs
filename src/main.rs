@@ -61,7 +61,7 @@ fn main() {
         }).resource("/edit-membership", |r| {
             r.middleware(enforcement::OrganisationMember);
             r.middleware(enforcement::AdminOnly);
-            r.post().with(update_membership)
+            r.post().with(update_membership);
         })
     }).bind("0.0.0.0:8080")
     .unwrap()

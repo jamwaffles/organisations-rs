@@ -30,17 +30,27 @@ impl<S> FromRequest<S> for CurrentAuth {
     fn from_request(req: &HttpRequest<S>, _: &Self::Config) -> Self::Result {
         let authorisation = req.headers().get(AUTHORIZATION);
 
-        if let Some(auth) = authorisation {
-            // TODO: Validate token
-            // TODO: Secret as env var
-            decode::<CurrentAuth>(
-                &auth.to_str().unwrap().split_whitespace().nth(1).unwrap(),
-                "super_secret_jam".as_ref(),
-                &Validation::default(),
-            ).map_err(|_| ErrorUnauthorized("JWT could not be decoded"))
-            .map(|t| t.claims)
-        } else {
-            Err(ErrorUnauthorized("JWT not present"))
+        println!("AUTHORISATION: {:?}", authorisation);
+
+        match authorisation {
+            Some(_) => {
+                if let Some(auth) = authorisation {
+                    // TODO: Validate token
+                    // TODO: Secret as env var
+                    decode::<CurrentAuth>(
+                        &auth.to_str().unwrap().split_whitespace().nth(1).unwrap(),
+                        "super_secret_jam".as_ref(),
+                        &Validation::default(),
+                    ).map_err(|_| ErrorUnauthorized("JWT could not be decoded"))
+                    .map(|t| t.claims)
+                } else {
+                    Err(ErrorUnauthorized("JWT not present"))
+                }
+            }
+            _ => {
+                println!("Authorisation is none");
+                Err(ErrorUnauthorized("No authorisation given"))
+            }
         }
     }
 }
