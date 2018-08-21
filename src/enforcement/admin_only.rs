@@ -1,7 +1,8 @@
 use actix_web::middleware::{Middleware, Started};
-use actix_web::{FromRequest, HttpRequest, HttpResponse, Result};
+use actix_web::FromRequest;
+use actix_web::{HttpRequest, HttpResponse, Result};
 use events::MembershipRole;
-use jwt::CurrentAuth;
+use extractors::jwt::CurrentAuth;
 
 pub struct AdminOnly;
 

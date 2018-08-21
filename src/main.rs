@@ -19,7 +19,7 @@ mod context;
 mod enforcement;
 mod events;
 mod eventstore;
-mod jwt;
+mod extractors;
 mod operations;
 mod responses;
 
@@ -56,10 +56,10 @@ fn main() {
             eventstore: addr.clone(),
         }).resource("/health", |r| r.get().f(health))
         .resource("/get-organisation-members/{organisation_id}", |r| {
-            r.middleware(enforcement::OrganisationMember);
+            // r.middleware(enforcement::OrganisationMember);
             r.get().with(get_organisation_members);
         }).resource("/edit-membership", |r| {
-            r.middleware(enforcement::OrganisationMember);
+            // r.middleware(enforcement::OrganisationMember);
             r.middleware(enforcement::AdminOnly);
             r.post().with(update_membership)
         })
